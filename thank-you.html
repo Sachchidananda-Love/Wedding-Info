@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Thank You</title>
+  <style>
+    :root{--orange:#e79e41;--green:#374f2a;--white:#f9f7f4}
+    html,body{height:100%;margin:0}
+    body{
+      background:var(--orange);
+      color:var(--green);
+      font-family:"Helvetica Neue",Arial,sans-serif;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      min-height:100vh;
+      padding:20px 0;
+      box-sizing:border-box;
+    }
+
+    /* Hero container holds the large thank-you PNG and the overlay */
+    .hero-wrap{position:relative;max-width:980px;width:100%;padding:20px;box-sizing:border-box}
+    .hero-img{display:block;width:100%;height:auto;border-radius:0;box-shadow:none;background:transparent}
+
+    /* Place the wallet buttons in an absolute overlay positioned inside
+       the `.hero-wrap`. Use a percentage `top` so placement is relative
+       to the actual image height and behaves more consistently on
+       mobile Safari / iPhone variants (fixes iPhone 12 placement). */
+    .overlay{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      /* anchor by `top` (percentage of `.hero-wrap` height) instead of `bottom` */
+      top: clamp(56%, 62%, 72%);
+      bottom: auto;
+      display:flex;
+      gap:20px;
+      align-items:center;
+      justify-content:center;
+      pointer-events:auto;
+    }
+
+    .overlay .wallet-link{display:block;}
+    .overlay .wallet{width:240px;max-width:40vw;height:auto;border-radius:0;box-shadow:none;background:transparent;}
+    .overlay .wallet-qr{display:none;width:520px;max-width:70vw;height:auto;}
+
+    .wallet-row-mobile{display:flex;gap:20px;align-items:center;justify-content:center;}
+    .wallet-row-desktop{display:none;align-items:center;justify-content:center;}
+
+    @media (max-width:560px){
+      body{padding:8px 0;}
+      /* keep same Y offset as desktop; only adjust spacing/size for small screens */
+      .overlay{gap:12px}
+      .overlay .wallet{width:44vw}
+      .hero-wrap{padding:8px}
+    }
+
+    @media (min-width: 561px){
+      .wallet-row-mobile{display:none;}
+      .wallet-row-desktop{display:flex;}
+      .overlay .wallet-qr{display:block;}
+      /* desktop: slightly different top percentage for larger images */
+      .overlay{top: clamp(50%, 60%, 68%); bottom: auto;} 
+    }
+    /* Page loader overlay */
+    #site-loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--green);z-index:99999;transition:opacity 260ms ease}
+    .loader-ring{width:86px;height:86px;display:block}
+    .loader-ring .ring-left,.loader-ring .ring-right{transform-box:fill-box;transform-origin:center}
+    .loader-ring .ring-left{animation:spin-left 1200ms linear infinite}
+    .loader-ring .ring-right{animation:spin-right 900ms linear infinite reverse}
+    .loader-ring circle{stroke-linecap:round}
+    @keyframes spin-left{to{transform:rotate(360deg)}}
+    @keyframes spin-right{to{transform:rotate(-360deg)}}
+  </style>
+</head>
+<body>
+  <div id="site-loader" aria-hidden="true">
+    <svg class="loader-ring" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="color:var(--orange)">
+      <g class="ring-left">
+        <circle cx="22" cy="32" r="14" stroke="currentColor" stroke-width="4.5" fill="none" stroke-dasharray="60 30" stroke-dashoffset="10"></circle>
+      </g>
+      <g class="ring-right">
+        <circle cx="42" cy="32" r="14" stroke="currentColor" stroke-width="4.5" fill="none" stroke-dasharray="60 30" stroke-dashoffset="40"></circle>
+      </g>
+    </svg>
+  </div>
+  <div class="hero-wrap" role="main">
+    <!-- Full-bleed thank-you image (single instance) -->
+    <img class="hero-img" src="Assets/thank-you.png" alt="Thank you">
+
+    <!-- Overlay the two wallet buttons in the bottom quarter of the hero image -->
+    <div class="overlay" aria-hidden="false">
+      <div class="wallet-row-mobile">
+        <a class="wallet-link" href="https://app.addtowallet.co/card/6972290987fffcc65b0adcca" target="_blank" rel="noopener">
+          <img class="wallet" src="Assets/google-wallet-button.png" alt="Add to Google Wallet">
+        </a>
+        <a class="wallet-link" href="https://app.addtowallet.co/card/6972290987fffcc65b0adcca" target="_blank" rel="noopener">
+          <img class="wallet" src="Assets/apple-wallet-button.png" alt="Add to Apple Wallet">
+        </a>
+      </div>
+      <div class="wallet-row-desktop">
+        <a class="wallet-link" href="https://app.addtowallet.co/card/6972290987fffcc65b0adcca" target="_blank" rel="noopener">
+          <img class="wallet-qr" src="Assets/qr.png" alt="Add to Wallet QR">
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const loader = document.getElementById('site-loader');
+      if (!loader) return;
+      function hide(){ loader.style.opacity='0'; setTimeout(()=>{ try{loader.remove()}catch(e){} },320); }
+      if (document.readyState === 'complete') hide(); else window.addEventListener('load', hide, { once: true });
+      setTimeout(()=>{ if (document.body.contains(loader)) hide(); }, 10000);
+    })();
+  </script>
+</body>
+</html>

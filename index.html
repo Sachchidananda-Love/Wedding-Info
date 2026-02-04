@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tatiana &amp; Calem | RSVP</title>
+  <style>
+    :root {
+      --orange: #e79e41;
+      --green: #374f2a;
+      --beige: #f1ecd6;
+      --white: #f9f7f4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--white);
+      color: var(--green);
+      font-family: "Avenir Next", "Futura", "Century Gothic", "Palatino", "Book Antiqua", serif;
+      line-height: 1.5;
+    }
+
+    main {
+      min-height: 100vh;
+      scroll-snap-type: y mandatory;
+      overflow-y: auto;
+      background: var(--white);
+    }
+
+    .panel {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(24px, 5vw, 72px);
+      scroll-snap-align: start;
+    }
+
+    .panel.orange {
+      background: var(--orange);
+    }
+
+    .panel.green {
+      background: var(--green);
+      flex-direction: column;
+      gap: 8px;
+      padding: clamp(12px, 3vw, 32px) clamp(12px, 3vw, 32px) clamp(70px, 9vw, 140px);
+    }
+
+    .panel.beige {
+      background: var(--beige);
+      color: var(--green);
+      flex-direction: column;
+      gap: 28px;
+      padding: clamp(12px, 3vw, 24px) clamp(16px, 4vw, 48px) clamp(32px, 6vw, 60px);
+    }
+
+    .hero-img {
+      display: block;
+      width: min(92vw, 900px);
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 16px 48px rgba(55, 79, 42, 0.22);
+    }
+
+    .panel.orange .hero-img {
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .panel.green .hero-img {
+      box-shadow: none;
+    }
+    .hint {
+      display: none;
+    }
+
+    .map-wrapper {
+      position: relative;
+      width: min(92vw, 900px);
+      overflow: visible;
+    }
+
+    .map-wrapper .hero-img {
+      width: 100%;
+      display: block;
+    }
+
+    .hotspot {
+      --size: 26px;
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      z-index: 2;
+    }
+
+    .hotspot button {
+      position: relative;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      border: 3px solid var(--green);
+      background: var(--orange);
+      cursor: pointer;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    .hotspot .pulse {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 3px solid rgba(231, 158, 65, 0.95);
+      animation: pulse 1.4s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.9; }
+      70% { opacity: 0.35; }
+      100% { transform: scale(1.7); opacity: 0; }
+    }
+
+    .hotspot button:focus-visible {
+      outline: 2px solid var(--beige);
+      outline-offset: 3px;
+    }
+
+    .hotspot:hover button,
+    .hotspot:focus-within button,
+    .hotspot.active button {
+      transform: scale(1.06);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    }
+
+    /* When a hotspot is active (its card is open) make the button green */
+    .hotspot.active button {
+      background: var(--green);
+      border-color: var(--beige);
+      color: var(--white);
+    }
+
+    /* Hide the pulsing ring when active so the green state is clear */
+    .hotspot.active .pulse {
+      display: none;
+    }
+
+    .card {
+      position: absolute;
+      left: calc(100% + 12px);
+      top: 50%;
+      transform: translateY(-50%) scale(0.98);
+      background: var(--white);
+      color: var(--green);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 16px;
+      width: 240px;
+      box-shadow: 0 18px 28px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Close button in the card (top-right) - hidden on desktop, shown on mobile */
+    .card .card-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--green);
+      font-size: 18px;
+      line-height: 1;
+      display: none; /* default hidden on desktop */
+      place-items: center;
+      cursor: pointer;
+      transition: background 120ms ease, color 120ms ease;
+    }
+
+    .card .card-close:hover {
+      background: rgba(0,0,0,0.04);
+    }
+
+    .card .time {
+      margin: 0 0 6px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 14px;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--green);
+      line-height: 1.4;
+    }
+
+    .hotspot[data-align="left"] .card {
+      left: auto;
+      right: calc(100% + 12px);
+    }
+
+    .hotspot:hover .card,
+    .hotspot:focus-within .card,
+    .hotspot.active .card {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      pointer-events: auto;
+    }
+
+    .map-links {
+      margin-top: -220px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 32px;
+      color: var(--beige);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 5;
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--beige);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 19px;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .map-link img {
+      display: block;
+      width: 68px;
+      height: auto;
+    }
+
+    .map-link span {
+      display: inline-block;
+      line-height: 1.2;
+    }
+
+    .when-title {
+      font-family: "Snell Roundhand", "Apple Chancery", "Edwardian Script ITC", "Segoe Script", "Palatino", serif;
+      font-size: clamp(52px, 8vw, 88px);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin: 0;
+    }
+
+    .schedule {
+      display: grid;
+      /* Use equal flexible columns around the divider so the line stays centered */
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      column-gap: clamp(6px, 1.6vw, 10px);
+      row-gap: clamp(12px, 3vw, 18px);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 700;
+      justify-content: center;
+      justify-items: center;
+      text-align: center;
+      /* limit overall width so the 1fr columns don't stretch too wide */
+      width: min(720px, 96vw);
+      margin: 0 auto;
+      align-self: center;
+    }
+
+    .schedule .divider {
+      width: 2px;
+      height: calc(100% - 12px);
+      background: var(--green);
+      min-height: 160px;
+      margin: 6px 8px;
+    }
+
+    .schedule-col {
+      display: grid;
+      gap: clamp(12px, 2vw, 18px);
+    }
+
+    .schedule-col:first-child {
+      justify-items: end;
+      text-align: right;
+    }
+
+    .schedule-col:last-child {
+      justify-items: start;
+      text-align: left;
+    }
+
+    .schedule-note {
+      margin: clamp(10px, 2vw, 16px) 0 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+
+    .when-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(12px, 3vw, 22px);
+      width: min(960px, 96vw);
+      margin: 0 auto;
+      text-align: center;
+      align-self: center;
+    }
+
+    .calendar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(14px, 3vw, 24px);
+      margin: clamp(22px, 4vw, 36px) auto 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      width: 100%;
+      justify-self: center;
+      max-width: min(960px, 96vw);
+    }
+
+    .calendar-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+      border-radius: 10px;
+    }
+
+    .calendar-actions a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(55, 79, 42, 0.18);
+    }
+
+    .calendar-actions img {
+      display: block;
+      width: clamp(140px, 26vw, 200px);
+      height: auto;
+    }
+
+    .gifts {
+      text-align: center;
+      max-width: 820px;
+    }
+
+    .gifts-title {
+      font-family: "Snell Roundhand", "Apple Chancery", "Edwardian Script ITC", "Segoe Script", "Palatino", serif;
+      font-size: clamp(54px, 9vw, 96px);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin: 0 0 clamp(18px, 3vw, 26px);
+    }
+
+    .gifts-headline {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      margin: 0 0 clamp(24px, 4vw, 32px);
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .gifts-body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: clamp(16px, 2.4vw, 20px);
+      line-height: 1.5;
+      margin: 0 0 clamp(18px, 3vw, 26px);
+      color: var(--green);
+    }
+
+    .other-info {
+      max-width: 900px;
+      width: 100%;
+      text-align: left;
+      display: grid;
+      gap: clamp(14px, 3vw, 20px);
+      color: var(--orange);
+    }
+
+    .info-title {
+      font-family: "Snell Roundhand", "Apple Chancery", "Edwardian Script ITC", "Segoe Script", "Palatino", serif;
+      font-size: clamp(48px, 8vw, 78px);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin: 0;
+      color: var(--orange);
+      text-align: center;
+    }
+
+    .info-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: clamp(12px, 2vw, 18px);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: clamp(17px, 2.6vw, 21px);
+      line-height: 1.6;
+      color: var(--orange);
+    }
+
+    .info-list li {
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .info-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--orange);
+      font-size: 1.4em;
+      line-height: 1;
+    }
+
+    .lock-line {
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    /* Soften sizing slightly for dress code text to avoid overflow on narrow screens */
+    .panel.green .gifts-body {
+      font-size: clamp(15px, 2.1vw, 19px);
+      white-space: normal;
+    }
+
+    .rsvp-section {
+      color: var(--green);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      gap: 28px;
+    }
+
+    .rsvp-title {
+      margin: 0;
+      font-size: clamp(46px, 8vw, 74px);
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: "Oswald", "Impact", "Arial Black", Arial, sans-serif;
+    }
+
+    .rsvp-card {
+      position: relative;
+      width: min(980px, 92vw);
+      background: var(--beige);
+      border: none;
+      border-radius: 0;
+      padding: clamp(22px, 4vw, 40px) clamp(26px, 5vw, 42px);
+      box-sizing: border-box;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .rsvp-card::before {
+      content: none;
+    }
+
+    .rsvp-card .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      justify-content: center;
+      margin: 4px 0 clamp(10px, 2vw, 16px);
+      flex-wrap: wrap;
+    }
+
+    .rsvp-card .card-header h3 {
+      margin: 0;
+      font-family: "Snell Roundhand", "Apple Chancery", "Edwardian Script ITC", "Segoe Script", "Palatino", serif;
+      font-size: clamp(36px, 6vw, 52px);
+      font-weight: 600;
+    }
+
+    .rsvp-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      gap: 14px 18px;
+      margin-bottom: 10px;
+      justify-content: center;
+      align-items: start;
+    }
+
+    .rsvp-grid .rsvp-field {
+      align-self: start;
+    }
+
+    .rsvp-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .rsvp-field label {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .required {
+      position: relative;
+    }
+    .required::after {
+      content: "*";
+      color: var(--orange);
+      font-weight: 800;
+      /* absolutely position the asterisk so it doesn't change label height
+         (keeps inputs aligned when some labels are required and others not) */
+      position: absolute;
+      left: calc(100% + 6px);
+      top: 0.1em;
+      font-size: 1em;
+      line-height: 1;
+    }
+
+    .rsvp-field input,
+    .rsvp-field textarea {
+      padding: 8px 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: var(--white);
+      color: var(--green);
+      box-shadow: none;
+    }
+
+    /* Highlight invalid fields so users can see where to fix */
+    .invalid {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .rsvp-field textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .rsvp-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      align-items: center;
+      column-gap: 24px;
+      row-gap: 12px;
+      margin: 16px 0 6px;
+      font-size: 15px;
+      font-weight: 700;
+      justify-content: start;
+      justify-items: start;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .rsvp-option-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    /* Push the choices (Yes/No) to the right side of the row.
+       Using the option label as the spacer is more robust across
+       widths and when the row wraps. */
+    .rsvp-option-label {
+      margin-right: auto;
+    }
+
+    .rsvp-option-label {
+      text-align: left;
+      min-width: 140px;
+    }
+
+    .rsvp-choice {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Keep the Yes/No choices visually grouped on the right */
+    .rsvp-choice + .rsvp-choice {
+      margin-left: 12px;
+    }
+
+    .rsvp-choice input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--green);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--white);
+      cursor: pointer;
+    }
+
+    /* When selected, fill the whole circle for a solid radio */
+    .rsvp-choice input[type="radio"] {
+      transition: background 120ms ease, border-color 120ms ease;
+    }
+
+    .rsvp-choice input[type="radio"]:checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    /* Remove the small inner-dot pseudo element (not needed when filling) */
+    .rsvp-choice input[type="radio"]:checked::before {
+      content: none;
+    }
+
+    .rsvp-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: clamp(12px, 2vw, 18px);
+    }
+
+    /* Page loader overlay */
+    #site-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--green);
+      z-index: 99999;
+      transition: opacity 260ms ease;
+    }
+
+    .loader-ring { width: 86px; height: 86px; display: block; }
+    .loader-ring .ring-left,
+    .loader-ring .ring-right { transform-box: fill-box; transform-origin: center; }
+    .loader-ring .ring-left { animation: spin-left 1200ms linear infinite; }
+    .loader-ring .ring-right { animation: spin-right 900ms linear infinite reverse; }
+    .loader-ring circle { stroke-linecap: round; }
+    @keyframes spin-left { to { transform: rotate(360deg); } }
+    @keyframes spin-right { to { transform: rotate(-360deg); } }
+
+    .add-guest {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--orange);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px 10px;
+    }
+
+    .add-guest .plus {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--orange);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      line-height: 1;
+      font-size: inherit;
+      box-sizing: border-box;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    /* Ensure the inline SVG scales and is centered inside the circle */
+    .add-guest .plus svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+      color: var(--orange);
+    }
+
+    .submit-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: clamp(22px, 5vw, 36px);
+    }
+
+    .submit-btn {
+      background: var(--orange);
+      color: var(--green);
+      font-weight: 800;
+      font-size: 20px;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 32px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 14px 26px rgba(231, 158, 65, 0.38);
+      transform: translateY(-1px);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    /* Center cards on small/mid screens regardless of hotspot position */
+    @media (max-width: 900px) {
+      .hotspot .card {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: calc(100vw - 32px) !important;
+        max-width: 420px !important;
+        max-height: 80vh !important;
+        z-index: 2000 !important;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* show close button on mobile */
+      .card .card-close {
+        display: grid;
+      }
+
+      .hotspot[data-align="left"] .card {
+        right: auto !important;
+        left: 50% !important;
+      }
+
+      /* disable hover/focus show on touch widths */
+      .hotspot:hover .card,
+      .hotspot:focus-within .card {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .hotspot.active .card {
+        opacity: 1;
+        transform: translate(-50%, -50%) !important;
+        pointer-events: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-img {
+        border-radius: 10px;
+        box-shadow: 0 10px 28px rgba(55, 79, 42, 0.18);
+      }
+
+      .panel {
+        min-height: auto;
+        padding: 16px 0 20px;
+      }
+
+      .hotspot {
+        --size: 22px;
+      }
+
+      .map-links {
+        gap: 16px;
+        /* reduce the upward overlap on narrower phones (fixes iPhone 12 layout) */
+        margin-top: -80px;
+      }
+
+
+      .map-link {
+        font-size: 15px;
+      }
+
+      .map-link img {
+        width: 40px;
+      }
+
+      .when-title {
+        font-size: clamp(42px, 12vw, 64px);
+      }
+
+      .schedule {
+        grid-template-columns: max-content auto max-content;
+        justify-items: center;
+        text-align: center;
+        font-size: 16px;
+        gap: 12px;
+      }
+
+      .schedule-col:first-child {
+        justify-items: end;
+        text-align: right;
+      }
+
+      .schedule-col:last-child {
+        justify-items: start;
+        text-align: left;
+      }
+
+      .schedule .divider {
+        width: 2px;
+        height: calc(100% - 8px);
+        /* slightly shorter minimum height on small screens to avoid footer overlap */
+        min-height: 120px;
+        margin: 4px 8px;
+      }
+
+      .schedule-col {
+        gap: 10px;
+      }
+
+      .calendar-actions {
+        flex-direction: row;
+        gap: 12px;
+      }
+      .calendar-actions img {
+        width: 40vw;
+        max-width: 160px;
+      }
+
+      .gifts-title {
+        font-size: clamp(44px, 13vw, 72px);
+      }
+
+      .gifts-headline {
+        font-size: 20px;
+      }
+
+      .gifts-body {
+        font-size: 16px;
+      }
+
+      .rsvp-card {
+        padding: 18px;
+      }
+
+      .rsvp-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rsvp-options {
+        grid-template-columns: 1fr;
+        justify-items: start;
+        justify-content: start;
+        column-gap: 12px;
+        width: 100%;
+      }
+
+      .rsvp-actions {
+        justify-content: center;
+      }
+    }
+
+    /* Desktop: bring Yes/No choices closer to their label */
+    @media (min-width: 900px) {
+      .rsvp-option-row {
+        align-items: center;
+      }
+      .rsvp-option-label {
+        margin-right: 8px; /* smaller gap between label and first choice on desktop */
+        min-width: 0;
+      }
+      .rsvp-choice + .rsvp-choice {
+        margin-left: 8px; /* keep small spacing between choices */
+      }
+      .rsvp-options {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page loader: shows until window 'load' completes -->
+  <div id="site-loader" aria-hidden="true">
+    <svg class="loader-ring" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="color:var(--orange)">
+      <!-- left ring group (has a gap) -->
+      <g class="ring-left">
+        <circle cx="22" cy="32" r="14" stroke="currentColor" stroke-width="4.5" fill="none" stroke-dasharray="60 30" stroke-dashoffset="10"></circle>
+      </g>
+      <!-- right ring group (has a gap) -->
+      <g class="ring-right">
+        <circle cx="42" cy="32" r="14" stroke="currentColor" stroke-width="4.5" fill="none" stroke-dasharray="60 30" stroke-dashoffset="40"></circle>
+      </g>
+    </svg>
+  </div>
+  <main>
+    <section class="panel orange">
+      <img class="hero-img" src="Assets/title.png" alt="Tatiana &amp; Calem wedding invitation title">
+    </section>
+
+    <section class="panel green">
+      <div class="map-wrapper">
+        <img class="hero-img" src="Assets/where.png" alt="Where: Avant-Garde Equestrian Farm map">
+
+        <div class="hotspot" style="--x: 70.76%; --y: 35.75%;" data-align="left">
+          <span class="pulse" aria-hidden="true"></span>
+          <button type="button" aria-label="Horse barn and arena" aria-expanded="false"></button>
+            <div class="card" role="dialog">
+              <button class="card-close" aria-label="Close">×</button>
+              <h3>Petting Zoo</h3>
+              <p class="time">4:30 - 5:30</p>
+              <p>You can go visit the miniature horses and donkey.</p>
+            </div>
+        </div>
+
+        <div class="hotspot" style="--x: 72.58%; --y: 41.58%;">
+          <span class="pulse" aria-hidden="true"></span>
+          <button type="button" aria-label="Ceremony lawn" aria-expanded="false"></button>
+          <div class="card" role="dialog">
+            <button class="card-close" aria-label="Close">×</button>
+            <h3>Dinner &amp; Reception</h3>
+            <p class="time">5:30 - 7:30</p>
+            <p>Speeches, dinner, and dancing will take place in the dressage arena.</p>
+          </div>
+        </div>
+
+        <div class="hotspot" style="--x: 40.56%; --y: 55.44%;">
+          <span class="pulse" aria-hidden="true"></span>
+          <button type="button" aria-label="Reception tent" aria-expanded="false"></button>
+          <div class="card" role="dialog">
+            <button class="card-close" aria-label="Close">×</button>
+            <h3>Ceremony</h3>
+            <p class="time">4:00 - 4:30</p>
+            <p>Unless we get rain, the ceremony will take place in the field.</p>
+          </div>
+        </div>
+
+        <div class="hotspot" style="--x: 35.62%; --y: 61.05%;" data-align="left">
+          <span class="pulse" aria-hidden="true"></span>
+          <button type="button" aria-label="Parking and shuttles" aria-expanded="false"></button>
+          <div class="card" role="dialog">
+            <button class="card-close" aria-label="Close">×</button>
+            <h3>Parking &amp; Tents</h3>
+            <p class="time">2:00 PM - 3:00 PM</p>
+            <p>Cars will be parked in the field. After dancing, guests camping overnight will return to a fire in the field.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="map-links">
+        <a class="map-link" href="https://maps.app.goo.gl/yekGCsyh2fYkgE1C6" aria-label="Open in Google Maps" target="_blank" rel="noopener">
+          <img src="Assets/google-maps-icon.png" alt="Google Maps icon">
+          <span>Open in<br>Google Maps</span>
+        </a>
+        <a class="map-link" href="https://maps.apple.com/place?address=1913%20Route%20148,%20Luskville%20QC%20J0X%202G0,%20Canada&coordinate=45.508502,-75.976033&name=Avant-Garde%20Equestrian%20Farm&place-id=I19BF2A1BE8005BD3&map=explore" aria-label="Open in Apple Maps" target="_blank" rel="noopener">
+          <img src="Assets/apple-maps-icon.png" alt="Apple Maps icon">
+          <span>Open in<br>Apple Maps</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel beige">
+      <div class="when-block">
+        <h2 class="when-title">When</h2>
+        <p class="schedule-note">Itinerary may change slightly closer to the date</p>
+        <div class="schedule">
+          <div class="schedule-col">
+            <div>2:00 - 3:00 PM</div>
+            <div>4:00 - 4:30 PM</div>
+            <div>4:30 - 5:30 PM</div>
+            <div>5:30 - 7:30 PM</div>
+            <div>7:30 PM +</div>
+          </div>
+          <div class="divider" aria-hidden="true"></div>
+          <div class="schedule-col">
+            <div>Arrival</div>
+            <div>Ceremony</div>
+            <div>Petting Zoo</div>
+            <div>Dinner &amp; Reception</div>
+            <div>Party</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-actions">
+        <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Calem%20%26%20Tatiana%20Wedding&dates=20260627T160000/20260627T210000&ctz=America/Toronto&location=1913%20Rte%20148%2C%20Luskville%2C%20Quebec%20J0X%202G0%2C%20Canada" aria-label="Add to Google Calendar" target="_blank" rel="noopener">
+          <img src="Assets/google-calendar.png" alt="Add to Google Calendar">
+        </a>
+        <a href="Assets/CalemTatianaWedding.ics" aria-label="Add to Apple Calendar" target="_blank" rel="noopener">
+          <img src="Assets/apple-calendar.png" alt="Add to Apple Calendar">
+        </a>
+      </div>
+    </section>
+
+    <section class="panel green">
+      <img class="hero-img" src="Assets/after-party.png" alt="After party details">
+    </section>
+
+    <section class="panel beige">
+      <div class="gifts">
+        <h2 class="gifts-title">Gifts</h2>
+        <div class="gifts-headline"><span class="lock-line">Your presence is the</span><br><span class="lock-line">greatest gift of all.</span></div>
+        <p class="gifts-body"><span class="lock-line">As we’re preparing to move to Norway, we won’t</span><br><span class="lock-line">be able to receive physical items.</span></p>
+        <p class="gifts-body"><span class="lock-line">Should you wish to honour us with a gift, we kindly</span><br><span class="lock-line">ask for a contribution to our future together.</span></p>
+      </div>
+    </section>
+
+    <section class="panel green">
+      <div class="gifts" style="color: var(--beige);">
+        <h2 class="gifts-title" style="color: var(--beige);">Dress Code</h2>
+        <div class="gifts-headline" style="color: var(--beige);">Feel free to embrace<br>the occasion.</div>
+        <p class="gifts-body" style="color: var(--beige);">We invite guests to dress as formal as they’d like</p>
+        <p class="gifts-body" style="color: var(--beige);">Just keep in mind that the celebration is on a horse farm, with reception in a dressage arena,<br>so grass &amp; dirt friendly footwear is recommended. (Stilettos will sink in the ground in the arena)</p>
+      </div>
+    </section>
+
+    <section class="panel green">
+      <div class="other-info">
+        <h2 class="info-title">Other Info</h2>
+        <ul class="info-list">
+          <li>We ask that guests do not try to touch or get too near the horses except with farm supervision.</li>
+          <li>There will be some wine provided on tables for the meal; anything further will be BYOB.</li>
+          <li>We may notify you of changes by updating the digital wallet pass—please add it to your device on the next page.</li>
+          <li>For those camping overnight, please note there will be music and chatter going on all night, past sunrise.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel beige rsvp-section">
+      <h2 class="rsvp-title">RSVP</h2>
+      <form class="rsvp-form" id="rsvp-form">
+        <div id="rsvp-cards">
+          <div class="rsvp-card" data-guest-index="1">
+            <div class="card-header">
+              <h3>Guest 1</h3>
+            </div>
+
+            <div class="rsvp-grid">
+              <div class="rsvp-field">
+                <label class="required" for="first-name-1">First Name</label>
+                <input id="first-name-1" data-base="first-name" name="first-name-1" type="text" placeholder="">
+              </div>
+              <div class="rsvp-field">
+                <label class="required" for="last-name-1">Last Name</label>
+                <input id="last-name-1" data-base="last-name" name="last-name-1" type="text" placeholder="">
+              </div>
+              <div class="rsvp-field">
+                <label class="required" for="email-1">Email</label>
+                <input id="email-1" data-base="email" name="email-1" type="email" placeholder="">
+              </div>
+              <div class="rsvp-field">
+                <label for="phone-1">Phone</label>
+                <input id="phone-1" data-base="phone" name="phone-1" type="tel" placeholder="">
+              </div>
+              <div class="rsvp-field" style="grid-column: 1 / -1;">
+                <label for="dietary-1">Dietary Restrictions</label>
+                <input id="dietary-1" data-base="dietary" name="dietary-1" type="text" placeholder="">
+              </div>
+              <div class="rsvp-field" style="grid-column: 1 / -1;">
+                <label for="notes-1">Additional Notes</label>
+                <textarea id="notes-1" data-base="notes" name="notes-1"></textarea>
+              </div>
+            </div>
+
+            <div class="rsvp-options" aria-label="Attendance choices">
+          <div class="rsvp-option-row">
+            <div class="rsvp-option-label required">Attending Dinner</div>
+            <label class="rsvp-choice"><input type="radio" data-base="attendingDinner" name="attendingDinner-1" value="yes"> Yes</label>
+            <label class="rsvp-choice"><input type="radio" data-base="attendingDinner" name="attendingDinner-1" value="no"> No</label>
+          </div>
+          <div class="rsvp-option-row">
+            <div class="rsvp-option-label required">Camping Overnight</div>
+            <label class="rsvp-choice"><input type="radio" data-base="campingOvernight" name="campingOvernight-1" value="yes"> Yes</label>
+            <label class="rsvp-choice"><input type="radio" data-base="campingOvernight" name="campingOvernight-1" value="no"> No</label>
+          </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rsvp-actions">
+          <button type="button" class="add-guest" id="add-guest">
+            Add Guest <span class="plus" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="submit-wrap">
+          <button type="button" class="submit-btn">Submit</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script>
+    const hotspots = Array.from(document.querySelectorAll('.hotspot'));
+    const buttons = hotspots.map(h => h.querySelector('button'));
+    const mobileMax = 900;
+
+    // Keep track of cards moved out of their hotspot so we can restore them
+    const movedCards = new Map();
+    const mapLinks = document.querySelector('.map-links');
+
+    function moveCardToContainer(card, container) {
+      if (!card || movedCards.has(card) || !container) return;
+      const parent = card.parentNode;
+      const next = card.nextSibling;
+      const originHotspot = parent.closest && parent.closest('.hotspot') ? parent.closest('.hotspot') : null;
+      movedCards.set(card, { parent, next, originHotspot, container });
+      container.appendChild(card);
+    }
+
+    function restoreCard(card) {
+      if (!card || !movedCards.has(card)) return;
+      const info = movedCards.get(card);
+      const { parent, next } = info;
+      if (next) parent.insertBefore(card, next);
+      else parent.appendChild(card);
+      movedCards.delete(card);
+    }
+
+    function applyModalStyle(card) {
+      if (!card) return;
+      // On mobile, place the card over the map-links area so it sits just
+      // below the map and covers the Open in Google/Apple Maps links.
+      if (window.innerWidth <= mobileMax && mapLinks) {
+        moveCardToContainer(card, mapLinks);
+        card.style.position = 'absolute';
+        card.style.top = '0';
+        card.style.left = '50%';
+        card.style.right = 'auto';
+        card.style.bottom = 'auto';
+        card.style.transform = 'translateX(-50%) scale(1)';
+        card.style.width = 'calc(100% - 32px)';
+        card.style.maxWidth = '420px';
+        card.style.maxHeight = '80vh';
+        card.style.overflow = 'auto';
+        card.style.zIndex = '2001';
+        card.style.opacity = '1';
+        card.style.pointerEvents = 'auto';
+        return;
+      }
+
+      // Default desktop behavior: move the card to body and center it fixed
+      moveCardToContainer(card, document.body);
+      card.style.position = 'fixed';
+      card.style.top = '50%';
+      card.style.left = '50%';
+      card.style.right = 'auto';
+      card.style.bottom = 'auto';
+      card.style.transform = 'translate(-50%, -50%) scale(1)';
+      card.style.width = 'calc(100vw - 32px)';
+      card.style.maxWidth = '420px';
+      card.style.maxHeight = '80vh';
+      card.style.overflow = 'auto';
+      card.style.zIndex = '2000';
+      card.style.opacity = '1';
+      card.style.pointerEvents = 'auto';
+    }
+
+    function clearModalStyle(card) {
+      if (!card) return;
+      ['position','top','left','right','bottom','transform','width','maxWidth','maxHeight','overflow','zIndex','opacity','pointerEvents'].forEach(prop => {
+        card.style[prop] = '';
+      });
+      // If we moved the card into the body, restore it back into its hotspot
+      restoreCard(card);
+    }
+
+    function closeCard(card) {
+      if (!card) return;
+      const info = movedCards.get(card);
+      const origin = info && info.originHotspot ? info.originHotspot : card.closest('.hotspot');
+      if (origin) {
+        origin.classList.remove('active');
+        const originBtn = origin.querySelector('button');
+        if (originBtn) originBtn.setAttribute('aria-expanded', 'false');
+      }
+      clearModalStyle(card);
+    }
+
+    function closeAll(except) {
+      hotspots.forEach(h => {
+        if (h !== except) {
+          h.classList.remove('active');
+          const btn = h.querySelector('button');
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+          clearModalStyle(h.querySelector('.card'));
+        }
+      });
+      // Also clear any cards we've moved out of their hotspots (they may not
+      // be selectable via `querySelector` on the hotspot anymore).
+      movedCards.forEach((info, card) => {
+        const originHotspot = info && info.originHotspot;
+        if (originHotspot && originHotspot !== except) {
+          // remove active class from origin as well
+          originHotspot.classList.remove('active');
+          const originBtn = originHotspot.querySelector('button');
+          if (originBtn) originBtn.setAttribute('aria-expanded', 'false');
+          clearModalStyle(card);
+        }
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const hotspot = e.currentTarget.closest('.hotspot');
+        const isActive = hotspot.classList.contains('active');
+        closeAll(isActive ? null : hotspot);
+        hotspot.classList.toggle('active', !isActive);
+        btn.setAttribute('aria-expanded', String(!isActive));
+
+        const cardEl = hotspot.querySelector('.card');
+        if (cardEl) {
+          if (!isActive && window.innerWidth <= mobileMax) {
+            applyModalStyle(cardEl);
+          } else {
+            clearModalStyle(cardEl);
+          }
+        }
+
+      });
+
+      btn.addEventListener('focus', () => {
+        closeAll(null);
+      });
+    });
+
+    // Close when clicking anywhere outside hotspots (maintains previous behavior)
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.hotspot')) {
+        closeAll(null);
+      }
+    });
+
+    // Wire up the close buttons inside cards
+    document.querySelectorAll('.card .card-close').forEach(cb => {
+      cb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = e.currentTarget.closest('.card');
+        closeCard(card);
+      });
+    });
+
+    // Auto-close card on mobile when the map has been scrolled ~25% off screen
+    const mapWrapper = document.querySelector('.map-wrapper');
+    let scrollTicking = false;
+    function handleScrollAutoClose() {
+      if (window.innerWidth > mobileMax) return;
+      if (!mapWrapper) return;
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        const rect = mapWrapper.getBoundingClientRect();
+        // If the top of the map has moved up past 25% of its height, close cards
+        const threshold = -rect.height * 0.25;
+        if (rect.top <= threshold) {
+          movedCards.forEach((info, card) => {
+            if (info && info.container === mapLinks) {
+              closeCard(card);
+            }
+          });
+        }
+        scrollTicking = false;
+      });
+    }
+
+    document.addEventListener('scroll', handleScrollAutoClose, { passive: true });
+
+    // RSVP submission helpers
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyE2FcZNleOTVS9PYRxgIx53JKe581Yb_tnpW9I7rVwkoDeNCPCVT6NdNJFTRYa4cFb/exec';
+
+    function buildGuestsPayload() {
+      const cards = Array.from(document.querySelectorAll('.rsvp-card'));
+      return cards.map(card => {
+        const getVal = (base) => {
+          const el = card.querySelector(`[data-base="${base}"]`);
+          if (!el) return '';
+          return (el.value || '').trim();
+        };
+        const attending = card.querySelector('input[data-base="attendingDinner"]:checked');
+        const camping = card.querySelector('input[data-base="campingOvernight"]:checked');
+        return {
+          firstName: getVal('first-name'),
+          lastName: getVal('last-name'),
+          email: getVal('email').toLowerCase(),
+          phone: getVal('phone'),
+          dietaryRestrictions: getVal('dietary'),
+          additionalNotes: getVal('notes'),
+          attendingDinner: attending ? attending.value === 'yes' : false,
+          campingOvernight: camping ? camping.value === 'yes' : false,
+        };
+      });
+    }
+
+ async function submitRsvp({ guests }) {
+  if (!APPS_SCRIPT_URL) {
+    throw new Error('RSVP endpoint is not configured yet.');
+  }
+
+  const payload = {
+    partyId: crypto.randomUUID(),
+    guests,
+  };
+
+  await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  // If fetch doesn't throw, we assume it sent successfully
+  return { success: true };
+}
+
+
+    // RSVP add-guest duplication
+    (function() {
+      const cardsContainer = document.getElementById('rsvp-cards');
+      const addGuestBtn = document.getElementById('add-guest');
+      if (!cardsContainer || !addGuestBtn) return;
+
+      const baseCard = cardsContainer.querySelector('.rsvp-card');
+
+      function updateCard(card, index, shouldClear) {
+        card.dataset.guestIndex = index;
+        const header = card.querySelector('.card-header h3');
+        if (header) header.textContent = `Guest ${index}`;
+
+        card.querySelectorAll('[data-base]').forEach(el => {
+          const base = el.getAttribute('data-base');
+          const newId = `${base}-${index}`;
+          el.name = newId;
+          el.id = newId;
+          if (shouldClear) {
+            if (el.type === 'radio' || el.type === 'checkbox') {
+              el.checked = false;
+            } else {
+              el.value = '';
+            }
+          }
+        });
+
+        card.querySelectorAll('label[for]').forEach(label => {
+          const base = label.getAttribute('for')?.split('-')[0];
+          if (!base) return;
+          label.setAttribute('for', `${base}-${index}`);
+        });
+      }
+
+      updateCard(baseCard, 1, false);
+
+      addGuestBtn.addEventListener('click', () => {
+        const newIndex = cardsContainer.children.length + 1;
+        const clone = baseCard.cloneNode(true);
+        updateCard(clone, newIndex, true);
+        cardsContainer.appendChild(clone);
+        clone.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    })();
+
+    // Validate form on Submit and show a small accessible modal when required fields are missing
+    function showValidationModal(message, items, elements) {
+      const existing = document.getElementById('validation-modal');
+      if (existing) existing.remove();
+
+      const overlay = document.createElement('div');
+      overlay.id = 'validation-modal';
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.background = 'rgba(0,0,0,0.36)';
+      overlay.style.zIndex = '4000';
+
+      const dialog = document.createElement('div');
+      dialog.setAttribute('role', 'alertdialog');
+      dialog.setAttribute('aria-modal', 'true');
+      dialog.style.maxWidth = '520px';
+      dialog.style.width = 'auto';
+      dialog.style.background = 'var(--white)';
+      dialog.style.color = 'var(--green)';
+      dialog.style.padding = '12px 14px';
+      dialog.style.borderRadius = '10px';
+      dialog.style.boxShadow = '0 14px 30px rgba(0,0,0,0.14)';
+      dialog.style.display = 'inline-block';
+      dialog.style.textAlign = 'center';
+      dialog.style.boxSizing = 'border-box';
+
+      const p = document.createElement('div');
+      p.style.margin = '0 0 12px';
+      p.style.fontWeight = '700';
+      p.style.textAlign = 'center';
+
+      // On narrow screens, split the message roughly in half across two lines
+      if (window.innerWidth <= 560 && typeof message === 'string') {
+        const words = message.split(/\s+/).filter(Boolean);
+        if (words.length > 3) {
+          const mid = Math.ceil(words.length / 2);
+          const first = words.slice(0, mid).join(' ');
+          const second = words.slice(mid).join(' ');
+          const line1 = document.createElement('div');
+          line1.textContent = first;
+          const line2 = document.createElement('div');
+          line2.textContent = second;
+          p.appendChild(line1);
+          p.appendChild(line2);
+        } else {
+          p.textContent = message || 'please fill out the required fields marked by a star';
+        }
+      } else {
+        p.textContent = message || 'please fill out the required fields marked by a star';
+      }
+
+      dialog.appendChild(p);
+
+      // If a list of missing items is provided, show it below the message
+      if (Array.isArray(arguments[1]) && arguments[1].length) {
+        const items = arguments[1];
+        const ul = document.createElement('ul');
+        ul.style.margin = '0 0 12px 18px';
+        items.forEach(it => {
+          const li = document.createElement('li');
+          li.textContent = it;
+          ul.appendChild(li);
+        });
+        dialog.appendChild(ul);
+      }
+
+      // Button container aligned to bottom-right inside the dialog
+      const btnWrap = document.createElement('div');
+      btnWrap.style.display = 'flex';
+      btnWrap.style.justifyContent = 'flex-end';
+      btnWrap.style.marginTop = '6px';
+      btnWrap.style.gap = '8px';
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = 'OK';
+      closeBtn.style.background = 'var(--orange)';
+      closeBtn.style.color = 'var(--green)';
+      closeBtn.style.fontWeight = '800';
+      closeBtn.style.padding = '8px 14px';
+      closeBtn.style.borderRadius = '8px';
+      closeBtn.style.border = 'none';
+      closeBtn.style.cursor = 'pointer';
+      // Close helper focuses the first invalid element (if present) after closing
+      function closeOverlay() {
+        try {
+          overlay.remove();
+        } catch (err) {}
+        // focus first invalid element if provided
+        const firstEl = (elements && elements.length) ? elements[0] : document.querySelector('.invalid');
+        if (firstEl) {
+          // if the element is a row container, try to find a focusable input inside
+          let toFocus = firstEl;
+          if (firstEl.querySelector) {
+            const inner = firstEl.querySelector('input, textarea, select');
+            if (inner) toFocus = inner;
+          }
+          try { toFocus.focus(); toFocus.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {}
+        }
+      }
+      closeBtn.addEventListener('click', closeOverlay);
+
+      btnWrap.appendChild(closeBtn);
+      dialog.appendChild(btnWrap);
+
+      // Wrap dialog in a block to allow centered inline-block sizing while keeping overlay centering
+      const wrapper = document.createElement('div');
+      wrapper.style.display = 'flex';
+      wrapper.style.alignItems = 'center';
+      wrapper.style.justifyContent = 'center';
+      wrapper.appendChild(dialog);
+
+      overlay.appendChild(wrapper);
+      document.body.appendChild(overlay);
+      closeBtn.focus();
+
+      overlay.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape') closeOverlay();
+      });
+      overlay.addEventListener('click', (ev) => { if (ev.target === overlay) closeOverlay(); });
+    }
+
+    function validateRSVPForm() {
+      const form = document.getElementById('rsvp-form');
+      const missing = [];
+      const elems = [];
+      if (!form) return { missing, elems };
+
+      // basic email pattern (very simple, covers common cases)
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      // Validate per guest card: first/last name, email and the two radio groups
+      const cards = form.querySelectorAll('.rsvp-card');
+      cards.forEach((card, idx) => {
+        const guestIndex = card.dataset.guestIndex || (idx + 1);
+
+        const first = card.querySelector('[data-base="first-name"]');
+        if (!first || first.value.trim() === '') {
+          missing.push(`Guest ${guestIndex}: First Name`);
+          if (first) elems.push(first);
+        }
+
+        const last = card.querySelector('[data-base="last-name"]');
+        if (!last || last.value.trim() === '') {
+          missing.push(`Guest ${guestIndex}: Last Name`);
+          if (last) elems.push(last);
+        }
+
+        const email = card.querySelector('[data-base="email"]');
+        if (!email || email.value.trim() === '') {
+          missing.push(`Guest ${guestIndex}: Email`);
+          if (email) elems.push(email);
+        } else if (!emailPattern.test(email.value.trim())) {
+          missing.push(`Guest ${guestIndex}: Email is invalid`);
+          if (email) elems.push(email);
+        }
+
+        const attending = card.querySelectorAll('input[data-base="attendingDinner"]');
+        if (attending && attending.length) {
+          const any = Array.from(attending).some(i => i.checked);
+          if (!any) {
+            missing.push(`Guest ${guestIndex}: Attending Dinner`);
+            // mark the row container if available
+            const row = card.querySelector('.rsvp-option-row');
+            if (row) elems.push(row);
+          }
+        }
+
+        const camping = card.querySelectorAll('input[data-base="campingOvernight"]');
+        if (camping && camping.length) {
+          const any = Array.from(camping).some(i => i.checked);
+          if (!any) {
+            missing.push(`Guest ${guestIndex}: Camping Overnight`);
+            // mark the second option row specifically if possible
+            const rows = card.querySelectorAll('.rsvp-option-row');
+            if (rows && rows[1]) elems.push(rows[1]);
+          }
+        }
+      });
+
+      return { missing, elems };
+    }
+
+    // Replace the old unconditional redirect with validation-aware handler
+    function clearValidationMarks() {
+      document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    }
+
+    document.querySelectorAll('.submit-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const result = validateRSVPForm();
+        const missing = result.missing || [];
+        const elems = result.elems || [];
+        clearValidationMarks();
+        // helper to remove invalid class when user interacts
+        function attachClearListener(el) {
+          if (!el) return;
+          // For radio row containers, attach listener to contained radios
+          if (el.querySelector && el.querySelectorAll('input[type="radio"]').length) {
+            const radios = Array.from(el.querySelectorAll('input[type="radio"]'));
+            const handler = () => { el.classList.remove('invalid'); radios.forEach(r => r.removeEventListener('change', handler)); };
+            radios.forEach(r => r.addEventListener('change', handler));
+            return;
+          }
+          // For regular inputs
+          const handler = () => { el.classList.remove('invalid'); el.removeEventListener('input', handler); el.removeEventListener('change', handler); };
+          el.addEventListener('input', handler);
+          el.addEventListener('change', handler);
+        }
+
+        if (missing.length) {
+          // mark elements visually and attach listeners to clear markers
+          elems.forEach(el => {
+            try { el.classList.add('invalid'); attachClearListener(el); } catch (err) {}
+          });
+          // show modal with list of missing fields and pass elements for focusing
+          showValidationModal('please fill out the required fields marked by a star', missing, elems);
+          return;
+        }
+
+        // submit to Apps Script then redirect
+        const guests = buildGuestsPayload();
+        if (!guests.length) {
+          showValidationModal('No guests found. Please try again.', [], []);
+          return;
+        }
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+        try {
+          await submitRsvp({ guests });
+setTimeout(() => {
+  window.location.href = 'thank-you.html';
+}, 600);
+
+        } catch (err) {
+          showValidationModal(err?.message || 'Failed to submit RSVP. Please try again.', [], []);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      });
+    });
+
+    // Hide the page loader once all resources are loaded
+    (function() {
+      const loader = document.getElementById('site-loader');
+      if (!loader) return;
+      function hideLoader() {
+        loader.style.opacity = '0';
+        setTimeout(() => { try { loader.remove(); } catch (e) {} }, 320);
+      }
+      if (document.readyState === 'complete') {
+        hideLoader();
+      } else {
+        window.addEventListener('load', hideLoader, { once: true });
+        // Fallback: ensure loader removed after 12s in case load doesn't fire
+        setTimeout(() => { if (document.body.contains(loader)) hideLoader(); }, 12000);
+      }
+    })();
+  </script>
+</body>
+</html>
