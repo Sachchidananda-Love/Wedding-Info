@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tatiana &amp; Calem | RSVP</title>
+  <title>Tatiana &amp; Calem | Wedding Info</title>
   <style>
     :root {
       --orange: #e79e41;
@@ -406,7 +406,7 @@
       text-align: left;
       display: grid;
       gap: clamp(14px, 3vw, 20px);
-      color: var(--orange);
+      color: var(--green);
     }
 
     .info-title {
@@ -415,7 +415,7 @@
       font-weight: 600;
       letter-spacing: 0.02em;
       margin: 0;
-      color: var(--orange);
+      color: var(--green);
       text-align: center;
     }
 
@@ -428,7 +428,7 @@
       font-family: "Helvetica Neue", Arial, sans-serif;
       font-size: clamp(17px, 2.6vw, 21px);
       line-height: 1.6;
-      color: var(--orange);
+      color: var(--green);
     }
 
     .info-list li {
@@ -441,7 +441,7 @@
       position: absolute;
       left: 0;
       top: 0;
-      color: var(--orange);
+      color: var(--green);
       font-size: 1.4em;
       line-height: 1;
     }
@@ -455,198 +455,6 @@
     .panel.green .gifts-body {
       font-size: clamp(15px, 2.1vw, 19px);
       white-space: normal;
-    }
-
-    .rsvp-section {
-      color: var(--green);
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      gap: 28px;
-    }
-
-    .rsvp-title {
-      margin: 0;
-      font-size: clamp(46px, 8vw, 74px);
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-family: "Oswald", "Impact", "Arial Black", Arial, sans-serif;
-    }
-
-    .rsvp-card {
-      position: relative;
-      width: min(980px, 92vw);
-      background: var(--beige);
-      border: none;
-      border-radius: 0;
-      padding: clamp(22px, 4vw, 40px) clamp(26px, 5vw, 42px);
-      box-sizing: border-box;
-      box-shadow: none;
-      overflow: hidden;
-    }
-
-    .rsvp-card::before {
-      content: none;
-    }
-
-    .rsvp-card .card-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      justify-content: center;
-      margin: 4px 0 clamp(10px, 2vw, 16px);
-      flex-wrap: wrap;
-    }
-
-    .rsvp-card .card-header h3 {
-      margin: 0;
-      font-family: "Snell Roundhand", "Apple Chancery", "Edwardian Script ITC", "Segoe Script", "Palatino", serif;
-      font-size: clamp(36px, 6vw, 52px);
-      font-weight: 600;
-    }
-
-    .rsvp-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(260px, 1fr));
-      gap: 14px 18px;
-      margin-bottom: 10px;
-      justify-content: center;
-      align-items: start;
-    }
-
-    .rsvp-grid .rsvp-field {
-      align-self: start;
-    }
-
-    .rsvp-field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .rsvp-field label {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .required {
-      position: relative;
-    }
-    .required::after {
-      content: "*";
-      color: var(--orange);
-      font-weight: 800;
-      /* absolutely position the asterisk so it doesn't change label height
-         (keeps inputs aligned when some labels are required and others not) */
-      position: absolute;
-      left: calc(100% + 6px);
-      top: 0.1em;
-      font-size: 1em;
-      line-height: 1;
-    }
-
-    .rsvp-field input,
-    .rsvp-field textarea {
-      padding: 8px 10px;
-      border: none;
-      border-radius: 4px;
-      font-size: 15px;
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background: var(--white);
-      color: var(--green);
-      box-shadow: none;
-    }
-
-    /* Highlight invalid fields so users can see where to fix */
-    .invalid {
-      outline: 3px solid var(--orange);
-      outline-offset: 3px;
-      border-radius: 6px;
-    }
-
-    .rsvp-field textarea {
-      resize: vertical;
-      min-height: 70px;
-    }
-
-    .rsvp-options {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(260px, 1fr));
-      align-items: center;
-      column-gap: 24px;
-      row-gap: 12px;
-      margin: 16px 0 6px;
-      font-size: 15px;
-      font-weight: 700;
-      justify-content: start;
-      justify-items: start;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .rsvp-option-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    /* Push the choices (Yes/No) to the right side of the row.
-       Using the option label as the spacer is more robust across
-       widths and when the row wraps. */
-    .rsvp-option-label {
-      margin-right: auto;
-    }
-
-    .rsvp-option-label {
-      text-align: left;
-      min-width: 140px;
-    }
-
-    .rsvp-choice {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Keep the Yes/No choices visually grouped on the right */
-    .rsvp-choice + .rsvp-choice {
-      margin-left: 12px;
-    }
-
-    .rsvp-choice input[type="radio"] {
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--green);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: var(--white);
-      cursor: pointer;
-    }
-
-    /* When selected, fill the whole circle for a solid radio */
-    .rsvp-choice input[type="radio"] {
-      transition: background 120ms ease, border-color 120ms ease;
-    }
-
-    .rsvp-choice input[type="radio"]:checked {
-      background: var(--green);
-      border-color: var(--green);
-    }
-
-    /* Remove the small inner-dot pseudo element (not needed when filling) */
-    .rsvp-choice input[type="radio"]:checked::before {
-      content: none;
-    }
-
-    .rsvp-actions {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      margin-top: clamp(12px, 2vw, 18px);
     }
 
     /* Page loader overlay */
@@ -669,67 +477,6 @@
     .loader-ring circle { stroke-linecap: round; }
     @keyframes spin-left { to { transform: rotate(360deg); } }
     @keyframes spin-right { to { transform: rotate(-360deg); } }
-
-    .add-guest {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--orange);
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 6px 10px;
-    }
-
-    .add-guest .plus {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--orange);
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      line-height: 1;
-      font-size: inherit;
-      box-sizing: border-box;
-      vertical-align: middle;
-      flex-shrink: 0;
-    }
-
-    /* Ensure the inline SVG scales and is centered inside the circle */
-    .add-guest .plus svg {
-      width: 16px;
-      height: 16px;
-      display: block;
-      color: var(--orange);
-    }
-
-    .submit-wrap {
-      display: flex;
-      justify-content: center;
-      margin-top: clamp(22px, 5vw, 36px);
-    }
-
-    .submit-btn {
-      background: var(--orange);
-      color: var(--green);
-      font-weight: 800;
-      font-size: 20px;
-      border: none;
-      border-radius: 14px;
-      padding: 12px 32px;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-    }
-
-    .submit-btn:hover {
-      box-shadow: 0 14px 26px rgba(231, 158, 65, 0.38);
-      transform: translateY(-1px);
-      transition: transform 120ms ease, box-shadow 120ms ease;
-    }
 
     /* Center cards on small/mid screens regardless of hotspot position */
     @media (max-width: 900px) {
@@ -857,43 +604,8 @@
         font-size: 16px;
       }
 
-      .rsvp-card {
-        padding: 18px;
-      }
-
-      .rsvp-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .rsvp-options {
-        grid-template-columns: 1fr;
-        justify-items: start;
-        justify-content: start;
-        column-gap: 12px;
-        width: 100%;
-      }
-
-      .rsvp-actions {
-        justify-content: center;
-      }
     }
 
-    /* Desktop: bring Yes/No choices closer to their label */
-    @media (min-width: 900px) {
-      .rsvp-option-row {
-        align-items: center;
-      }
-      .rsvp-option-label {
-        margin-right: 8px; /* smaller gap between label and first choice on desktop */
-        min-width: 0;
-      }
-      .rsvp-choice + .rsvp-choice {
-        margin-left: 8px; /* keep small spacing between choices */
-      }
-      .rsvp-options {
-        justify-content: flex-start;
-      }
-    }
   </style>
 </head>
 <body>
@@ -1031,7 +743,7 @@
       </div>
     </section>
 
-    <section class="panel green">
+    <section class="panel beige">
       <div class="other-info">
         <h2 class="info-title">Other Info</h2>
         <ul class="info-list">
@@ -1043,72 +755,6 @@
       </div>
     </section>
 
-    <section class="panel beige rsvp-section">
-      <h2 class="rsvp-title">RSVP</h2>
-      <form class="rsvp-form" id="rsvp-form">
-        <div id="rsvp-cards">
-          <div class="rsvp-card" data-guest-index="1">
-            <div class="card-header">
-              <h3>Guest 1</h3>
-            </div>
-
-            <div class="rsvp-grid">
-              <div class="rsvp-field">
-                <label class="required" for="first-name-1">First Name</label>
-                <input id="first-name-1" data-base="first-name" name="first-name-1" type="text" placeholder="">
-              </div>
-              <div class="rsvp-field">
-                <label class="required" for="last-name-1">Last Name</label>
-                <input id="last-name-1" data-base="last-name" name="last-name-1" type="text" placeholder="">
-              </div>
-              <div class="rsvp-field">
-                <label class="required" for="email-1">Email</label>
-                <input id="email-1" data-base="email" name="email-1" type="email" placeholder="">
-              </div>
-              <div class="rsvp-field">
-                <label for="phone-1">Phone</label>
-                <input id="phone-1" data-base="phone" name="phone-1" type="tel" placeholder="">
-              </div>
-              <div class="rsvp-field" style="grid-column: 1 / -1;">
-                <label for="dietary-1">Dietary Restrictions</label>
-                <input id="dietary-1" data-base="dietary" name="dietary-1" type="text" placeholder="">
-              </div>
-              <div class="rsvp-field" style="grid-column: 1 / -1;">
-                <label for="notes-1">Additional Notes</label>
-                <textarea id="notes-1" data-base="notes" name="notes-1"></textarea>
-              </div>
-            </div>
-
-            <div class="rsvp-options" aria-label="Attendance choices">
-          <div class="rsvp-option-row">
-            <div class="rsvp-option-label required">Attending Dinner</div>
-            <label class="rsvp-choice"><input type="radio" data-base="attendingDinner" name="attendingDinner-1" value="yes"> Yes</label>
-            <label class="rsvp-choice"><input type="radio" data-base="attendingDinner" name="attendingDinner-1" value="no"> No</label>
-          </div>
-          <div class="rsvp-option-row">
-            <div class="rsvp-option-label required">Camping Overnight</div>
-            <label class="rsvp-choice"><input type="radio" data-base="campingOvernight" name="campingOvernight-1" value="yes"> Yes</label>
-            <label class="rsvp-choice"><input type="radio" data-base="campingOvernight" name="campingOvernight-1" value="no"> No</label>
-          </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="rsvp-actions">
-          <button type="button" class="add-guest" id="add-guest">
-            Add Guest <span class="plus" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </button>
-        </div>
-
-        <div class="submit-wrap">
-          <button type="button" class="submit-btn">Submit</button>
-        </div>
-      </form>
-    </section>
   </main>
   <script>
     const hotspots = Array.from(document.querySelectorAll('.hotspot'));
@@ -1284,345 +930,6 @@
     }
 
     document.addEventListener('scroll', handleScrollAutoClose, { passive: true });
-
-    // RSVP submission helpers
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyE2FcZNleOTVS9PYRxgIx53JKe581Yb_tnpW9I7rVwkoDeNCPCVT6NdNJFTRYa4cFb/exec';
-
-    function buildGuestsPayload() {
-      const cards = Array.from(document.querySelectorAll('.rsvp-card'));
-      return cards.map(card => {
-        const getVal = (base) => {
-          const el = card.querySelector(`[data-base="${base}"]`);
-          if (!el) return '';
-          return (el.value || '').trim();
-        };
-        const attending = card.querySelector('input[data-base="attendingDinner"]:checked');
-        const camping = card.querySelector('input[data-base="campingOvernight"]:checked');
-        return {
-          firstName: getVal('first-name'),
-          lastName: getVal('last-name'),
-          email: getVal('email').toLowerCase(),
-          phone: getVal('phone'),
-          dietaryRestrictions: getVal('dietary'),
-          additionalNotes: getVal('notes'),
-          attendingDinner: attending ? attending.value === 'yes' : false,
-          campingOvernight: camping ? camping.value === 'yes' : false,
-        };
-      });
-    }
-
- async function submitRsvp({ guests }) {
-  if (!APPS_SCRIPT_URL) {
-    throw new Error('RSVP endpoint is not configured yet.');
-  }
-
-  const payload = {
-    partyId: crypto.randomUUID(),
-    guests,
-  };
-
-  await fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  // If fetch doesn't throw, we assume it sent successfully
-  return { success: true };
-}
-
-
-    // RSVP add-guest duplication
-    (function() {
-      const cardsContainer = document.getElementById('rsvp-cards');
-      const addGuestBtn = document.getElementById('add-guest');
-      if (!cardsContainer || !addGuestBtn) return;
-
-      const baseCard = cardsContainer.querySelector('.rsvp-card');
-
-      function updateCard(card, index, shouldClear) {
-        card.dataset.guestIndex = index;
-        const header = card.querySelector('.card-header h3');
-        if (header) header.textContent = `Guest ${index}`;
-
-        card.querySelectorAll('[data-base]').forEach(el => {
-          const base = el.getAttribute('data-base');
-          const newId = `${base}-${index}`;
-          el.name = newId;
-          el.id = newId;
-          if (shouldClear) {
-            if (el.type === 'radio' || el.type === 'checkbox') {
-              el.checked = false;
-            } else {
-              el.value = '';
-            }
-          }
-        });
-
-        card.querySelectorAll('label[for]').forEach(label => {
-          const base = label.getAttribute('for')?.split('-')[0];
-          if (!base) return;
-          label.setAttribute('for', `${base}-${index}`);
-        });
-      }
-
-      updateCard(baseCard, 1, false);
-
-      addGuestBtn.addEventListener('click', () => {
-        const newIndex = cardsContainer.children.length + 1;
-        const clone = baseCard.cloneNode(true);
-        updateCard(clone, newIndex, true);
-        cardsContainer.appendChild(clone);
-        clone.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    })();
-
-    // Validate form on Submit and show a small accessible modal when required fields are missing
-    function showValidationModal(message, items, elements) {
-      const existing = document.getElementById('validation-modal');
-      if (existing) existing.remove();
-
-      const overlay = document.createElement('div');
-      overlay.id = 'validation-modal';
-      overlay.style.position = 'fixed';
-      overlay.style.inset = '0';
-      overlay.style.display = 'flex';
-      overlay.style.alignItems = 'center';
-      overlay.style.justifyContent = 'center';
-      overlay.style.background = 'rgba(0,0,0,0.36)';
-      overlay.style.zIndex = '4000';
-
-      const dialog = document.createElement('div');
-      dialog.setAttribute('role', 'alertdialog');
-      dialog.setAttribute('aria-modal', 'true');
-      dialog.style.maxWidth = '520px';
-      dialog.style.width = 'auto';
-      dialog.style.background = 'var(--white)';
-      dialog.style.color = 'var(--green)';
-      dialog.style.padding = '12px 14px';
-      dialog.style.borderRadius = '10px';
-      dialog.style.boxShadow = '0 14px 30px rgba(0,0,0,0.14)';
-      dialog.style.display = 'inline-block';
-      dialog.style.textAlign = 'center';
-      dialog.style.boxSizing = 'border-box';
-
-      const p = document.createElement('div');
-      p.style.margin = '0 0 12px';
-      p.style.fontWeight = '700';
-      p.style.textAlign = 'center';
-
-      // On narrow screens, split the message roughly in half across two lines
-      if (window.innerWidth <= 560 && typeof message === 'string') {
-        const words = message.split(/\s+/).filter(Boolean);
-        if (words.length > 3) {
-          const mid = Math.ceil(words.length / 2);
-          const first = words.slice(0, mid).join(' ');
-          const second = words.slice(mid).join(' ');
-          const line1 = document.createElement('div');
-          line1.textContent = first;
-          const line2 = document.createElement('div');
-          line2.textContent = second;
-          p.appendChild(line1);
-          p.appendChild(line2);
-        } else {
-          p.textContent = message || 'please fill out the required fields marked by a star';
-        }
-      } else {
-        p.textContent = message || 'please fill out the required fields marked by a star';
-      }
-
-      dialog.appendChild(p);
-
-      // If a list of missing items is provided, show it below the message
-      if (Array.isArray(arguments[1]) && arguments[1].length) {
-        const items = arguments[1];
-        const ul = document.createElement('ul');
-        ul.style.margin = '0 0 12px 18px';
-        items.forEach(it => {
-          const li = document.createElement('li');
-          li.textContent = it;
-          ul.appendChild(li);
-        });
-        dialog.appendChild(ul);
-      }
-
-      // Button container aligned to bottom-right inside the dialog
-      const btnWrap = document.createElement('div');
-      btnWrap.style.display = 'flex';
-      btnWrap.style.justifyContent = 'flex-end';
-      btnWrap.style.marginTop = '6px';
-      btnWrap.style.gap = '8px';
-      const closeBtn = document.createElement('button');
-      closeBtn.textContent = 'OK';
-      closeBtn.style.background = 'var(--orange)';
-      closeBtn.style.color = 'var(--green)';
-      closeBtn.style.fontWeight = '800';
-      closeBtn.style.padding = '8px 14px';
-      closeBtn.style.borderRadius = '8px';
-      closeBtn.style.border = 'none';
-      closeBtn.style.cursor = 'pointer';
-      // Close helper focuses the first invalid element (if present) after closing
-      function closeOverlay() {
-        try {
-          overlay.remove();
-        } catch (err) {}
-        // focus first invalid element if provided
-        const firstEl = (elements && elements.length) ? elements[0] : document.querySelector('.invalid');
-        if (firstEl) {
-          // if the element is a row container, try to find a focusable input inside
-          let toFocus = firstEl;
-          if (firstEl.querySelector) {
-            const inner = firstEl.querySelector('input, textarea, select');
-            if (inner) toFocus = inner;
-          }
-          try { toFocus.focus(); toFocus.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {}
-        }
-      }
-      closeBtn.addEventListener('click', closeOverlay);
-
-      btnWrap.appendChild(closeBtn);
-      dialog.appendChild(btnWrap);
-
-      // Wrap dialog in a block to allow centered inline-block sizing while keeping overlay centering
-      const wrapper = document.createElement('div');
-      wrapper.style.display = 'flex';
-      wrapper.style.alignItems = 'center';
-      wrapper.style.justifyContent = 'center';
-      wrapper.appendChild(dialog);
-
-      overlay.appendChild(wrapper);
-      document.body.appendChild(overlay);
-      closeBtn.focus();
-
-      overlay.addEventListener('keydown', (ev) => {
-        if (ev.key === 'Escape') closeOverlay();
-      });
-      overlay.addEventListener('click', (ev) => { if (ev.target === overlay) closeOverlay(); });
-    }
-
-    function validateRSVPForm() {
-      const form = document.getElementById('rsvp-form');
-      const missing = [];
-      const elems = [];
-      if (!form) return { missing, elems };
-
-      // basic email pattern (very simple, covers common cases)
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      // Validate per guest card: first/last name, email and the two radio groups
-      const cards = form.querySelectorAll('.rsvp-card');
-      cards.forEach((card, idx) => {
-        const guestIndex = card.dataset.guestIndex || (idx + 1);
-
-        const first = card.querySelector('[data-base="first-name"]');
-        if (!first || first.value.trim() === '') {
-          missing.push(`Guest ${guestIndex}: First Name`);
-          if (first) elems.push(first);
-        }
-
-        const last = card.querySelector('[data-base="last-name"]');
-        if (!last || last.value.trim() === '') {
-          missing.push(`Guest ${guestIndex}: Last Name`);
-          if (last) elems.push(last);
-        }
-
-        const email = card.querySelector('[data-base="email"]');
-        if (!email || email.value.trim() === '') {
-          missing.push(`Guest ${guestIndex}: Email`);
-          if (email) elems.push(email);
-        } else if (!emailPattern.test(email.value.trim())) {
-          missing.push(`Guest ${guestIndex}: Email is invalid`);
-          if (email) elems.push(email);
-        }
-
-        const attending = card.querySelectorAll('input[data-base="attendingDinner"]');
-        if (attending && attending.length) {
-          const any = Array.from(attending).some(i => i.checked);
-          if (!any) {
-            missing.push(`Guest ${guestIndex}: Attending Dinner`);
-            // mark the row container if available
-            const row = card.querySelector('.rsvp-option-row');
-            if (row) elems.push(row);
-          }
-        }
-
-        const camping = card.querySelectorAll('input[data-base="campingOvernight"]');
-        if (camping && camping.length) {
-          const any = Array.from(camping).some(i => i.checked);
-          if (!any) {
-            missing.push(`Guest ${guestIndex}: Camping Overnight`);
-            // mark the second option row specifically if possible
-            const rows = card.querySelectorAll('.rsvp-option-row');
-            if (rows && rows[1]) elems.push(rows[1]);
-          }
-        }
-      });
-
-      return { missing, elems };
-    }
-
-    // Replace the old unconditional redirect with validation-aware handler
-    function clearValidationMarks() {
-      document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
-    }
-
-    document.querySelectorAll('.submit-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const result = validateRSVPForm();
-        const missing = result.missing || [];
-        const elems = result.elems || [];
-        clearValidationMarks();
-        // helper to remove invalid class when user interacts
-        function attachClearListener(el) {
-          if (!el) return;
-          // For radio row containers, attach listener to contained radios
-          if (el.querySelector && el.querySelectorAll('input[type="radio"]').length) {
-            const radios = Array.from(el.querySelectorAll('input[type="radio"]'));
-            const handler = () => { el.classList.remove('invalid'); radios.forEach(r => r.removeEventListener('change', handler)); };
-            radios.forEach(r => r.addEventListener('change', handler));
-            return;
-          }
-          // For regular inputs
-          const handler = () => { el.classList.remove('invalid'); el.removeEventListener('input', handler); el.removeEventListener('change', handler); };
-          el.addEventListener('input', handler);
-          el.addEventListener('change', handler);
-        }
-
-        if (missing.length) {
-          // mark elements visually and attach listeners to clear markers
-          elems.forEach(el => {
-            try { el.classList.add('invalid'); attachClearListener(el); } catch (err) {}
-          });
-          // show modal with list of missing fields and pass elements for focusing
-          showValidationModal('please fill out the required fields marked by a star', missing, elems);
-          return;
-        }
-
-        // submit to Apps Script then redirect
-        const guests = buildGuestsPayload();
-        if (!guests.length) {
-          showValidationModal('No guests found. Please try again.', [], []);
-          return;
-        }
-        const originalText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = 'Submitting...';
-        try {
-          await submitRsvp({ guests });
-setTimeout(() => {
-  window.location.href = 'thank-you.html';
-}, 600);
-
-        } catch (err) {
-          showValidationModal(err?.message || 'Failed to submit RSVP. Please try again.', [], []);
-        } finally {
-          btn.disabled = false;
-          btn.textContent = originalText;
-        }
-      });
-    });
 
     // Hide the page loader once all resources are loaded
     (function() {
